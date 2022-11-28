@@ -7,7 +7,7 @@ using namespace std;
 #include<vector>
 #include<windows.h>
 #include<algorithm>
-
+#include<string.h>
 
 
 

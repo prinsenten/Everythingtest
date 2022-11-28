@@ -1,6 +1,5 @@
 #include"Everything.h"
-
-
+#include<cstring>
 //// 以上为c++17以上才含有的库文件 可以直接遍历出指定盘符下的文件
 //int main() 
 // {
@@ -36,7 +35,6 @@ lpFileSystemNameBuffer: PChar; { 文件操作系统名称}
 nFileSystemNameSize: DWORD{ 文件操作系统名称长度 }
 ) : BOOL;
 */
-#define wzwDrives L"\\\\.\\PhysicalDrive0"
 bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 {
 	//1.判读是否为NTFS盘
@@ -130,7 +128,7 @@ bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 int main()
 {
 	DISK_GEOMETRY pdg = { 0 };
-	GetNTFS(wzwDrives, &pdg);
+	GetNTFS("c", &pdg);
 
 
 }

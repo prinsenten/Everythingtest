@@ -1,7 +1,8 @@
 ﻿  Everythingcpp.cpp
   The contents of <filesystem> are available only with C++17 or later.
-D:\Everythingtest\demo\Everything\Everything\Everythingcpp.cpp(97,11): warning C4477: “wprintf”: 格式字符串“%I64d”需要类型“__int64”的参数，但可变参数 1 拥有了类型“LARGE_INTEGER”
+D:\Everythingtest\demo\Everything\Everything\Everythingcpp.cpp(67,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\Everythingtest\demo\Everything\Everything\Everythingcpp.cpp(68,2): error C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   test.cpp
   The contents of <filesystem> are available only with C++17 or later.
   正在生成代码...
-  Everything.vcxproj -> D:\Everythingtest\demo\Everything\Debug\Everything.exe
+D:\Everythingtest\demo\Everything\Everything\test.cpp : fatal error C1090: PDB API 调用失败，错误代码“3”: D:\Everythingtest\demo\Everything\Everything\Debug\vc142.pdb
