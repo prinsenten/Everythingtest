@@ -1,0 +1,11 @@
+﻿  test.cpp
+  The contents of <filesystem> are available only with C++17 or later.
+D:\Everythingtest\demo\everythingtest\everythingtest\test.cpp(174,11): warning C4477: “printf”: 格式字符串“%x”需要类型“unsigned int”的参数，但可变参数 1 拥有了类型“DWORDLONG”
+D:\Everythingtest\demo\everythingtest\everythingtest\test.cpp(174,11): message : 请考虑在格式字符串中使用“%llx”
+D:\Everythingtest\demo\everythingtest\everythingtest\test.cpp(174,11): message : 请考虑在格式字符串中使用“%I64x”
+D:\Everythingtest\demo\everythingtest\everythingtest\test.cpp(175,11): warning C4477: “printf”: 格式字符串“%x”需要类型“unsigned int”的参数，但可变参数 1 拥有了类型“DWORDLONG”
+D:\Everythingtest\demo\everythingtest\everythingtest\test.cpp(175,11): message : 请考虑在格式字符串中使用“%llx”
+D:\Everythingtest\demo\everythingtest\everythingtest\test.cpp(175,11): message : 请考虑在格式字符串中使用“%I64x”
+D:\Everythingtest\demo\everythingtest\everythingtest\test.cpp(177,10): warning C4101: “pathBuffer”: 未引用的局部变量
+D:\Everythingtest\demo\everythingtest\everythingtest\test.cpp(207): warning C4715: “GetNTFS”: 不是所有的控件路径都返回值
+  everythingtest.vcxproj -> D:\Everythingtest\demo\everythingtest\Debug\everythingtest.exe

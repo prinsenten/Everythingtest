@@ -58,7 +58,7 @@ bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 		else
 			cout << "此盘非NTFS格式" << endl;
 	}
-
+	/*
 	//2.获取驱动盘句柄
 	char fileName[MAX_PATH];
 	fileName[0] = '\0';
@@ -122,7 +122,8 @@ bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 	else
 	{
 		cout << "获取USN日志基本信息失败 —— status:%x " << status << "error:%d\n" << GetLastError() << endl;
-	}
+	}*/
+	return true;
 }
 
 int main()

@@ -1,8 +1,2 @@
 ﻿  Everythingcpp.cpp
   The contents of <filesystem> are available only with C++17 or later.
-D:\Everythingtest\demo\Everything\Everything\Everythingcpp.cpp(67,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\Everythingtest\demo\Everything\Everything\Everythingcpp.cpp(68,2): error C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  test.cpp
-  The contents of <filesystem> are available only with C++17 or later.
-  正在生成代码...
-D:\Everythingtest\demo\Everything\Everything\test.cpp : fatal error C1090: PDB API 调用失败，错误代码“3”: D:\Everythingtest\demo\Everything\Everything\Debug\vc142.pdb
