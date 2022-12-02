@@ -38,34 +38,30 @@ nFileSystemNameSize: DWORD{ 文件操作系统名称长度 }
 
 #define BUF_LEN 4096
 
-bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
+bool GetNTFS(LPCSTR volName)
 {
 	//1.判读是否为NTFS盘
-	bool isNTFS = false;
 	char sysNameBuf[MAX_PATH] = { 0 };
-	int status = GetVolumeInformationA(volName,			//文件路径
-										NULL,			//下面的我们都不需要获取
-										0,				//
-										NULL,			//
-										NULL,			//
-										NULL,			//
-										sysNameBuf,		//文件系统名称 是我们获取ntfs需要的
-										MAX_PATH);		//名称长度
+	GetVolumeInformationA(volName,			//文件路径
+		NULL,			//下面的我们都不需要获取
+		0,				//
+		NULL,			//
+		NULL,			//
+		NULL,			//
+		sysNameBuf,		//文件系统名称 是我们获取ntfs需要的
+		MAX_PATH);		//名称长度
 	printf(" 文件系统名 : %s\n", volName);
-	//if (0 == status)
-	//{
-		if (0 == strcmp(sysNameBuf, "NTFS")) {
-			cout << "磁盘为NTFS格式" << endl;
-			isNTFS = true;
-		}
-		else
-			cout << "此盘非NTFS格式" << endl;
-//	}
-	
+	if (0 == strcmp(sysNameBuf, "NTFS"))
+		cout << "磁盘为NTFS格式" << endl;
+	else
+	{
+		cout << "此盘非NTFS格式" << endl;
+		return 0;
+	}
+
 	//2.获取驱动盘句柄
 	char fileName[MAX_PATH];
 	fileName[0] = '\0';
-	bool getHandleSucces = false;
 	// 传入的文件名必须为\\.\C:的形式  
 	strcpy_s(fileName, "\\\\.\\");
 	strcat_s(fileName, volName);
@@ -84,21 +80,20 @@ bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 		FILE_ATTRIBUTE_READONLY,			//文件属性只读
 		NULL);								//不复制句柄
 
-	if (INVALID_HANDLE_VALUE != handl) 
-	{
+	if (INVALID_HANDLE_VALUE != handl)
 		printf("获取句柄成功\n");
-		getHandleSucces = true;
-	}
 	else
+	{
 		cout << "获取驱动盘失败" << endl;
-
+		//return 0;
+	}
 	//3.初始化USN日志文件
-	bool initUsnJournalSuccess = false;
 	DWORD br;
 	CREATE_USN_JOURNAL_DATA cujd;
 	cujd.MaximumSize = 0;//使用默认值
 	cujd.AllocationDelta = 0;//使用默认值
-	status = DeviceIoControl(handl,	//句柄
+	int 
+		status = DeviceIoControl(handl,	//句柄
 		FSCTL_CREATE_USN_JOURNAL,	//打开日志
 		&cujd,						//cujd数据
 		sizeof(cujd),				//数据大小
@@ -108,16 +103,14 @@ bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 		NULL);						//
 
 	if (0 != status)
-	{
 		cout << "初始化UNSN日志成功" << endl;
-		initUsnJournalSuccess = true;
-	}
 	else
+	{
 		cout << "初始化UNSN日志失败" << endl;
-	
+	//	return 0;
+	}
 	
 	//4.获取日志操作
-	bool getBasicInfoSuccess = false;
 	USN_JOURNAL_DATA UsnInfo;
 	status = DeviceIoControl(handl,
 		FSCTL_QUERY_USN_JOURNAL,
@@ -127,15 +120,13 @@ bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 		&br,
 		NULL);
 	if (0 != status)
-	{
 		cout << "获取日志成功" << endl;
-		getBasicInfoSuccess = true;
-	}
 	else
 	{
 		cout << "获取USN日志基本信息失败 —— status:" << status << "   error:" << GetLastError() << endl;
+	//	return 0;
 	}
-
+	
 	//5.列出usn文件
 	MFT_ENUM_DATA med;
 	med.StartFileReferenceNumber = 0;
@@ -155,21 +146,23 @@ bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 	{
 		DWORD dwRetBytes = usnDataSize - sizeof(USN);
 		UsnRecord = (PUSN_RECORD)(((PCHAR)buffer) + sizeof(USN));
-
+		int iSize;
 		while (dwRetBytes > 0)
 		{
+			iSize = WideCharToMultiByte(CP_OEMCP, 0, UsnRecord->FileName, -1, NULL, 0, NULL, NULL);
+			char* filesName;
+			filesName = (char*)malloc(iSize * sizeof(char));
 			//打印获取到的信息
-			const int strLen = UsnRecord->FileNameLength;
-			char fileName[MAX_PATH] = { 0 };
+			//int strLen = UsnRecord->FileNameLength;
 			WideCharToMultiByte(CP_OEMCP,//当前系统OEM代码页，一种原始设备制造商硬件扫描码
-				NULL,//一般为0，运行效率更快
+				0,//一般为0，运行效率更快
 				UsnRecord->FileName,//代转换的宽字符串
-				strLen,//代转换字符串长度
-				fileName,//接收转换后输出新串的缓冲区
-				strLen+1,//输出缓冲区大小
+				-1,//代转换字符串长度
+				filesName,//接收转换后输出新串的缓冲区
+				iSize,//输出缓冲区大小
 				NULL,//系统默认字符
-				FALSE);//开关变量的指针
-			printf("FileName:%s\n", fileName);
+				NULL);//开关变量的指针
+			printf("FileName:%s\n", filesName);
 			//获取文件路径信息
 			printf("FileReferenceNumber:%xI64\n", UsnRecord->FileReferenceNumber);
 			printf("ParentFileReferenceNumber:%xI64\n", UsnRecord->ParentFileReferenceNumber);
@@ -179,7 +172,7 @@ bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 			//获取下一个记录
 			DWORD recordLen = UsnRecord->RecordLength;
 			dwRetBytes -= recordLen;
-			UsnRecord = (PUSN_RECORD)(((PCHAR)UsnRecord) + recordLen);
+			UsnRecord = (PUSN_RECORD)((PCHAR)UsnRecord + recordLen);
 		}
 		med.StartFileReferenceNumber = *(USN*)&buffer;
 	}
@@ -209,7 +202,7 @@ bool GetNTFS(LPCSTR volName, DISK_GEOMETRY* pdg)
 int main()
 {
 	DISK_GEOMETRY pdg = { 0 };
-	GetNTFS("C:\\", &pdg);
+	GetNTFS("C:\\");
 
 	system("pause");
 }
