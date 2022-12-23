@@ -11,7 +11,7 @@
 //};
 //*/
 //long _findfirst(char* filespec, struct _finddata_t* fileinfo)；//成功返回句柄被findnext使用，失败返回-1
-void GetFiles(string path, vector<string>& files)
+void GetFiles1(string path, vector<string>& files)
 {
 	intptr_t Hfile = 0;
 	string p;
@@ -27,7 +27,7 @@ void GetFiles(string path, vector<string>& files)
 				//如果不加这一句会导致无限迭代。
 				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
 				{
-					GetFiles(p.assign(path).append("\\").append(fileinfo.name), files);
+					GetFiles1(p.assign(path).append("\\").append(fileinfo.name), files);
 				}
 			}
 			else

@@ -11,4 +11,6 @@ using namespace std;
 
 
 
-void GetFiles(string path, vector<string>& files);
+void GetFiles1(string path, vector<string>& files);
+void GetFiles2(string path, vector<string>& files);
+void GetFiles3(string path, vector<string>& files);
